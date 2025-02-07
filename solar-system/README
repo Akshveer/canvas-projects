@@ -1,0 +1,53 @@
+Solar System Simulation
+
+Overview:
+This project is an interactive Solar System Simulation built using HTML5 Canvas and JavaScript. It features orbiting planets, background stars, and galaxies, with additional functionalities such as toggling planet orbits and tilting the view for a more 3D-like experience.
+
+
+Features:
+Realistic Planetary Motion: Planets revolve around the Sun at different speeds.
+
+
+Interactive Controls:
+Toggle planet orbits on/off.
+
+
+Visual Enhancements:
+Twinkling stars and background galaxies.
+
+Improved planetary textures for a more realistic appearance.
+
+Smooth Animations: Achieved using the Canvas API and requestAnimationFrame().
+
+
+Technologies Used:
+HTML5 Canvas: For rendering the Solar System visuals.
+
+JavaScript (ES6+): Handles animation, interactions, and logic.
+
+CSS: For styling and UI enhancements.
+
+
+Usage:
+Move your mouse over planets to display their names.
+
+Toggle Orbits: Click the orbit toggle button to show/hide orbits.
+
+
+Future Improvements:
+Add a zoom-in feature to focus on individual planets.
+
+Display planet information on click (e.g., size, distance, composition).
+
+Adding 3D Simulation.
+
+
+Demo:
+A live demo link will be added soon.
+
+
+License:
+This project is open-source and available under the MIT License.
+
+Author:
+Developed by Akshveer Kaur.
