@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Library</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+</head>
+<body class="flex flex-col justify-center items-center h-screen bg-gray-100">
+    <canvas id="drawingBoard" width="600" height="400" class="border-2 border-black bg-white"></canvas>
+    <div id="colourPalette" class="flex space-x-2 m-4">
+        <div id="redColor" class="bg-red-600 w-8 h-8 cursor-pointer active:border-2 border-white"></div> 
+        <div id="blueColor" class="bg-blue-700 w-8 h-8 cursor-pointer active:border-2 border-white"></div>
+        <div id="blackColor" class="bg-black w-8 h-8 cursor-pointer active:border-2 border-white"></div>
+        <div id="greenColor" class="bg-green-700 w-8 h-8 cursor-pointer active:border-2 border-white"></div>
+        <div id="textbox" class="cursor-pointer"><i class="fas fa-edit w-8 h-8 hover:text-blue-400"></i></div>
+        <div id="highlighter" class="cursor-pointer"><i class="fa-solid fa-highlighter w-8 h-8 hover:text-blue-400"></i></div>
+        <div id="eraser"><i class="fa-solid fa-eraser icon w-8 h-8 cursor-pointer hover:text-blue-400"></i></div>
+        <div id="download" class="w-8 h-8"><i class="fa-solid fa-download w-7 h-8 hover:text-blue-400"></i></div>
+    </div> 
+
+    <script>
+        const canvas = document.getElementById("drawingBoard");     
+        const ctx = canvas.getContext("2d");    
+        let drawing = false;    
+        let currentColor = "black";     
+        let isHighlighter = false; 
+        let currentWidth = 3;
+        let textBoxActive = false;
+        let textBox = null;
+        let textInput = "";
+
+        // Add event listeners to the color palette
+        document.getElementById("redColor").addEventListener("click", () => changeColor("red"));
+        document.getElementById("blueColor").addEventListener("click", () => changeColor("blue"));
+        document.getElementById("blackColor").addEventListener("click", () => changeColor("black"));
+        document.getElementById("greenColor").addEventListener("click", () => changeColor("green"));
+        document.getElementById("eraser").addEventListener("click", () => clearOut());
+
+        // Function to set the white background color of the canvas
+        function setWhiteBackground(){
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // Calling the function
+        setWhiteBackground();
+
+        // Function to change the color
+        function changeColor(color){
+            currentColor = color;
+        }
+
+        function clearOut(){
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            currentColor = "white"
+        }
+
+        canvas.addEventListener("mousedown", (event) => {
+            drawing = true;
+            ctx.beginPath();
+            ctx.moveTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
+        });     
+
+        canvas.addEventListener("mouseup", () => drawing = false);      
+        canvas.addEventListener("mousemove", draw);     
+
+        // This function handles the mouse movements logic
+        function draw(event){
+            if (!drawing) return;
+            ctx.lineWidth = currentWidth;      
+            ctx.lineCap = "round";      
+
+            ctx.strokeStyle = currentColor;  
+
+            ctx.lineTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);        
+            ctx.stroke();       
+            ctx.beginPath();        
+            ctx.moveTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);     
+        }
+
+        // Handles the download action
+        document.getElementById("download").addEventListener("click", () => {
+            const link = document.createElement("a");
+            link.href = canvas.toDataURL("image/png");       
+            link.download = "canvas-drawing.png";
+            link.click();       
+        });
+
+        // Function for the highlighter
+        document.getElementById("highlighter").addEventListener("click", () => {
+            isHighlighter = !isHighlighter;
+            const highlighter = document.getElementById("highlighter");
+            highlighter.classList.toggle("bg-yellow-500"); // Active background color for highlighter
+
+            if (isHighlighter){
+                currentColor = "rgba(255, 255, 0, 0.5)";
+                currentWidth = 15;
+            }
+            else {
+                currentColor = "black";
+                currentWidth = 3;
+            }
+        });
+
+        // Activate textbox
+        document.getElementById("textbox").addEventListener("click", () => {
+            textBoxActive = !textBoxActive;
+            const textbox = document.getElementById("textbox");
+            textbox.classList.toggle("bg-blue-500"); // Active background color for textbox
+
+            if (textBoxActive) {
+                canvas.addEventListener("click", createTextBox);
+            } else {
+                canvas.removeEventListener("click", createTextBox);
+            }
+        });
+
+        // Function to create the textbox
+        function createTextBox(event) {
+            const x = event.clientX - canvas.offsetLeft;
+            const y = event.clientY - canvas.offsetTop;
+            textBox = { x, y, width: 150, height: 30, text: " ", isEditing: true };
+            textInput = " ";
+            drawTextBox();
+        }
+
+        // Function to draw the textbox
+        function drawTextBox() {
+            if (textBox) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height); 
+                ctx.fillStyle = "lightgray";
+                ctx.fillRect(textBox.x, textBox.y, textBox.width, textBox.height);
+                ctx.fillStyle = "black";
+                ctx.font = "16px Arial";
+                ctx.fillText(textBox.text, textBox.x + 5, textBox.y + 20);
+            }
+        }
+
+        // Handle text input
+        window.addEventListener("keydown", (event) => {
+            if (textBox && textBox.isEditing) {
+                if (event.key === "Backspace") {
+                    textInput = textInput.slice(0, -1);
+                } else if (event.key === "Enter") {
+                    textBox.isEditing = false; // Stop editing
+                } else {
+                    textInput += event.key;
+                }
+                textBox.text = textInput;
+                drawTextBox(); 
+            }
+        });
+        
+    </script> 
+    <p class="absolute bottom-0 right-0 m-4">@Akshveer Kaur</p>  
+</body>
+</html>

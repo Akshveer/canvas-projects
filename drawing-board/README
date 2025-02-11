@@ -1,0 +1,19 @@
+App Library - Drawing and Text Editor
+This simple web application allows users to draw, change colors, highlight, erase, and add text to a canvas. It is built using HTML5, Tailwind CSS, and Font Awesome, with a JavaScript-driven interface for handling drawing and text functionalities.
+
+Features
+Drawing: Freehand drawing on the canvas with selectable colors (red, blue, green, black).
+Highlighter: Highlight areas with semi-transparent yellow color.
+Eraser: Clear the drawing or reset the canvas.
+Text Box: Add and edit text on the canvas.
+Download: Download the canvas as a PNG image.
+Responsive UI: Built with Tailwind CSS for responsiveness and easy customization.
+Technologies Used
+HTML5: Provides the basic structure and functionality.
+Tailwind CSS: Utility-first CSS framework used for styling the elements.
+Font Awesome: Used for iconography (e.g., eraser, highlighter).
+JavaScript: For handling drawing and interaction with the canvas element.
+Setup
+Clone the repository or create an HTML file with the code provided below.
+Include external libraries for Tailwind CSS and Font Awesome as shown in the <head> section.
+Run the HTML file in any modern web browser to interact with the app.
