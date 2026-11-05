@@ -3,16 +3,624 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Canvas Projects</title>
-</head>
-<body>
-  <h1>Canvas Projects</h1>
-  <p>Explore three projects demonstrating HTML5 Canvas concepts.</p>
+  <meta name="description" content="Explore Akshveer Kaur's HTML5 Canvas projects: an interactive drawing board, a music visualizer, and an animated solar system.">
 
-  <ul>
-    <li><a href="./drawing-board/">Drawing Board</a></li>
-    <li><a href="./music-visualizer/">Music Visualizer</a></li>
-    <li><a href="./solar-system/">Solar System</a></li>
-  </ul>
+  <title>Canvas Projects | Akshveer Kaur</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1019;
+      --panel: #131c29;
+      --text: #f2f5fa;
+      --muted: #a8b5c8;
+      --line: #293548;
+      --accent: #a6f3c4;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    a:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 5px;
+    }
+
+    main,
+    header,
+    footer {
+      width: min(1120px, calc(100% - 48px));
+      margin: auto;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      text-decoration: none;
+      font-weight: 750;
+      letter-spacing: -0.03em;
+    }
+
+    .brand span {
+      color: var(--accent);
+    }
+
+    .source {
+      font-size: 0.88rem;
+      color: var(--muted);
+      text-underline-offset: 5px;
+    }
+
+    .hero {
+      padding: 76px 0 52px;
+      max-width: 800px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 750;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin: 0 0 18px;
+    }
+
+    h1 {
+      font-size: clamp(2.7rem, 6vw, 4.8rem);
+      line-height: 1.08;
+      letter-spacing: -0.055em;
+      margin: 0 0 24px;
+    }
+
+    h1 span {
+      color: var(--accent);
+    }
+
+    .intro {
+      max-width: 630px;
+      color: var(--muted);
+      font-size: 1.08rem;
+      margin: 0;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 26px;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      border: 1px solid var(--line);
+      border-radius: 99px;
+      padding: 5px 12px;
+      color: #c9d5e6;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin: 12px 0 20px;
+    }
+
+    .section-head h2 {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .section-head span {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      background: var(--panel);
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .card:hover {
+      border-color: #62758c;
+      transform: translateY(-4px);
+    }
+
+    .art {
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .art svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .drawing {
+      background: #1a2834;
+    }
+
+    .music {
+      background: #172631;
+    }
+
+    .solar {
+      background: #141c31;
+    }
+
+    .number {
+      position: absolute;
+      top: 16px;
+      left: 18px;
+      color: #c5d0df;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+    }
+
+    .content {
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .category {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 0 0 9px;
+    }
+
+    .content h3 {
+      font-size: 1.35rem;
+      letter-spacing: -0.025em;
+      margin: 0 0 12px;
+    }
+
+    .description {
+      font-size: 0.91rem;
+      color: var(--muted);
+      margin: 0 0 18px;
+    }
+
+    .features {
+      padding: 0;
+      margin: 0 0 25px;
+      list-style: none;
+      color: #cbd5e3;
+      font-size: 0.82rem;
+    }
+
+    .features li {
+      margin: 7px 0;
+    }
+
+    .features li::before {
+      content: "+";
+      color: var(--accent);
+      margin-right: 9px;
+    }
+
+    .button {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+      padding: 12px 16px;
+      border: 1px solid #415568;
+      border-radius: 9px;
+      background: #203242;
+      font-size: 0.86rem;
+      font-weight: 700;
+      margin-top: auto;
+    }
+
+    .button:hover {
+      background: #2a4253;
+    }
+
+    .note {
+      margin: 48px 0 64px;
+      border-top: 1px solid var(--line);
+      padding-top: 25px;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 25px;
+    }
+
+    .note h2 {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .note p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 23px 0 30px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    footer a {
+      text-underline-offset: 4px;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        display: grid;
+        grid-template-columns: 230px 1fr;
+      }
+
+      .art {
+        height: 100%;
+        min-height: 260px;
+        border-bottom: 0;
+        border-right: 1px solid var(--line);
+      }
+
+      .hero {
+        padding-top: 55px;
+      }
+
+      .features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 18px;
+      }
+    }
+
+    @media (max-width: 580px) {
+      main,
+      header,
+      footer {
+        width: calc(100% - 32px);
+      }
+
+      header {
+        padding: 21px 0;
+      }
+
+      .source {
+        font-size: 0.76rem;
+      }
+
+      .hero {
+        padding: 45px 0 38px;
+      }
+
+      .intro {
+        font-size: 1rem;
+      }
+
+      .card {
+        display: flex;
+      }
+
+      .art {
+        height: 180px;
+        min-height: 0;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .content {
+        padding: 23px;
+      }
+
+      .features {
+        display: block;
+      }
+
+      .note {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin: 35px 0 42px;
+      }
+
+      footer {
+        flex-direction: column;
+        gap: 7px;
+      }
+
+      .section-head span {
+        font-size: 0.72rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card {
+        transition: none;
+      }
+
+      .card:hover {
+        transform: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <a class="brand" href="./">
+      AK<span>.</span> / Canvas Projects
+    </a>
+
+    <a class="source" href="https://github.com/akshveer/canvas-projects">
+      View source on GitHub ↗
+    </a>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <p class="eyebrow">A creative coding collection</p>
+
+      <h1 id="page-title">
+        One canvas.<br>
+        <span>Three ways to create.</span>
+      </h1>
+
+      <p class="intro">
+        Draw something new, see music take shape, or explore an animated
+        solar system. Three small projects I built to explore what
+        HTML5 Canvas can do.
+      </p>
+
+      <div class="tags" aria-label="Technologies">
+        <span class="tag">HTML5 Canvas</span>
+        <span class="tag">JavaScript</span>
+        <span class="tag">CSS</span>
+        <span class="tag">Web Audio API</span>
+      </div>
+    </section>
+
+    <section aria-labelledby="projects-title">
+      <div class="section-head">
+        <h2 id="projects-title">Explore the projects</h2>
+        <span>03 browser-based demos</span>
+      </div>
+
+      <div class="grid">
+        <!-- Drawing Board -->
+        <article class="card">
+          <div class="art drawing">
+            <span class="number">01 / DRAW</span>
+
+            <svg viewBox="0 0 340 200" aria-hidden="true">
+              <rect
+                x="65" y="40" width="210" height="124" rx="9"
+                fill="#e9eee9"
+                transform="rotate(-5 170 102)"
+              />
+
+              <path
+                d="M98 123 C117 65 143 149 170 98 S213 72 240 103"
+                fill="none"
+                stroke="#326c83"
+                stroke-width="5"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M113 137 L216 129"
+                stroke="#e8cf65"
+                stroke-width="15"
+                stroke-linecap="round"
+                opacity=".65"
+              />
+
+              <circle cx="244" cy="51" r="21" fill="#a6f3c4"/>
+
+              <path
+                d="M235 54 L251 38 L257 44 L241 60 L232 63Z"
+                fill="#244139"
+              />
+            </svg>
+          </div>
+
+          <div class="content">
+            <p class="category">Interaction & drawing</p>
+            <h3>Drawing Board</h3>
+
+            <p class="description">
+              A space to sketch ideas and experiment with drawing tools
+              directly on a canvas.
+            </p>
+
+            <ul class="features">
+              <li>Draw with different colours</li>
+              <li>Text and highlight tools</li>
+              <li>Download your artwork as a PNG</li>
+            </ul>
+
+            <a class="button" href="./drawing-board/">
+              Open drawing board
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Music Visualizer -->
+        <article class="card">
+          <div class="art music">
+            <span class="number">02 / LISTEN</span>
+
+            <svg viewBox="0 0 340 200" aria-hidden="true">
+              <g fill="#a6f3c4">
+                <rect x="60" y="94" width="12" height="42" rx="6"/>
+                <rect x="81" y="78" width="12" height="74" rx="6"/>
+                <rect x="102" y="96" width="12" height="38" rx="6"/>
+                <rect x="123" y="54" width="12" height="122" rx="6"/>
+                <rect x="144" y="72" width="12" height="86" rx="6"/>
+                <rect x="165" y="43" width="12" height="144" rx="6"/>
+                <rect x="186" y="66" width="12" height="98" rx="6"/>
+                <rect x="207" y="86" width="12" height="58" rx="6"/>
+                <rect x="228" y="63" width="12" height="104" rx="6"/>
+                <rect x="249" y="90" width="12" height="50" rx="6"/>
+                <rect x="270" y="102" width="12" height="26" rx="6"/>
+              </g>
+
+              <path
+                d="M45 115H295"
+                stroke="#e4fff1"
+                opacity=".2"
+              />
+            </svg>
+          </div>
+
+          <div class="content">
+            <p class="category">Audio & visualization</p>
+            <h3>Music Visualizer</h3>
+
+            <p class="description">
+              Turn an audio file into moving visuals using canvas
+              animation and the Web Audio API.
+            </p>
+
+            <ul class="features">
+              <li>Choose an audio file to begin</li>
+              <li>Switch between bars, ripples, and waves</li>
+              <li>Play and stop controls</li>
+            </ul>
+
+            <a class="button" href="./music-visualizer/">
+              Open music visualizer
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Solar System -->
+        <article class="card">
+          <div class="art solar">
+            <span class="number">03 / EXPLORE</span>
+
+            <svg viewBox="0 0 340 200" aria-hidden="true">
+              <g fill="#8c9fbc">
+                <circle cx="58" cy="68" r="1.5"/>
+                <circle cx="291" cy="54" r="1.5"/>
+                <circle cx="81" cy="173" r="1"/>
+                <circle cx="285" cy="163" r="1"/>
+                <circle cx="233" cy="27" r="1"/>
+              </g>
+
+              <g fill="none" stroke="#465574">
+                <ellipse
+                  cx="174" cy="113" rx="48" ry="25"
+                  transform="rotate(-25 174 113)"
+                />
+                <ellipse
+                  cx="174" cy="113" rx="84" ry="43"
+                  transform="rotate(-25 174 113)"
+                />
+                <ellipse
+                  cx="174" cy="113" rx="124" ry="63"
+                  transform="rotate(-25 174 113)"
+                />
+              </g>
+
+              <circle cx="174" cy="113" r="24" fill="#f3c56a"/>
+              <circle
+                cx="174" cy="113" r="32"
+                fill="#f3c56a" opacity=".09"
+              />
+              <circle cx="217" cy="89" r="7" fill="#dca391"/>
+              <circle cx="105" cy="145" r="11" fill="#9bced1"/>
+              <circle cx="277" cy="68" r="15" fill="#a4a4d7"/>
+            </svg>
+          </div>
+
+          <div class="content">
+            <p class="category">Motion & animation</p>
+            <h3>Solar System</h3>
+
+            <p class="description">
+              A canvas-based solar system exploring orbital movement
+              and animated graphics.
+            </p>
+
+            <ul class="features">
+              <li>Animated planetary motion</li>
+              <li>Toggle orbit guides</li>
+              <li>Built with HTML, JavaScript, and CSS</li>
+            </ul>
+
+            <a class="button" href="./solar-system/">
+              Explore solar system
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="note" aria-labelledby="about-title">
+      <h2 id="about-title">Built to learn by doing.</h2>
+
+      <p>
+        This collection brings together my experiments with canvas drawing,
+        mouse and keyboard interaction, audio analysis, and animation.
+        Open a demo to try it, or explore the source code on GitHub.
+        The illustrations above represent each project's theme.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <span>Created by Akshveer Kaur</span>
+
+    <a href="https://github.com/akshveer/canvas-projects">
+      Explore the code on GitHub ↗
+    </a>
+  </footer>
 </body>
 </html>
