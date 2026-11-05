@@ -1,5 +1,8 @@
-Canvas Projects
+Canvas Elements
 A collection of three small projects demonstrating HTML5 Canvas concepts through drawing, music visualization, and animation.
+
+Checkout the project at:
+https://akshveer.github.io/canvas-projects/
 
 Projects
 1. Drawing Board — An interactive drawing tool with draw, erase, text box, highlight, and download features. Contains an HTML file and its own README.
