@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Visualizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-gray-700 text-white flex flex-col items-center justify-center min-h-screen p-4">
+    <h4 class="p-2 text-center text-sm sm:text-base md:text-lg lg:text-xl">Welcome to the Music Visualizer App</h4>
+    <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-center">Music Visualizer</h1>
+    
+    <!--Main Content-->
+    <div class="flex flex-col items-center gap-3 w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl">
+        <!--File Input-->
+        <input type="file" id="audioFile" accept="audio/*" class="bg-gray-800 text-white px-4 py-2 border-2 rounded-3xl cursor-pointer w-full max-w-xs sm:max-w-sm">
+        
+        <div class="flex gap-2"> 
+            <!--Play Button-->
+            <button id="playButton" class="bg-green-600 hover:bg-green-700 active:green-700 px-4 py-2 rounded-lg">Play</button>
+            <!--Stop Button-->
+            <button id="stopButton" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg">Stop</button>
+        </div>
+        
+        <!-- Selection Pane: Bars, Ripples, Waves-->
+        <select id="visualizerType" class="bg-blue-500 text-white rounded-lg hover:bg-blue-400 p-2 w-full max-w-xs sm:max-w-sm">
+            <option value="bars">Bars</option>
+            <option value="ripples">Ripples</option>
+            <option value="waves">Waves</option>
+        </select>
+    </div>
+
+    <!-- Canvas: Music Visualizer-->
+    <canvas id="visualizerCanvas" width="700" height="400" class="border border-white mt-6 rounded-lg bg-black w-full max-w-3xl h-auto">
+    </canvas>
+
+    <!-- JavaScript -->
+    <script>
+        // Declaring the variables
+        let audioContext, audioElement, sourceNode, analyser, canvas, ctx;
+        let bufferLength, dataArray, animationId;
+
+        let visualizerType = 'bars';    // Setting bars by default
+        
+        // Allow users to change the visualizer type
+        document.getElementById("visualizerType").addEventListener("change", function(event) {
+            visualizerType = event.target.value;
+        });
+
+        // Plays the button when the button is clicked
+        document.getElementById("playButton").addEventListener("click", function() {
+
+            // Gets the file from ths id: audioFile and saves it in the file constant
+            const file = document.getElementById("audioFile").files[0]; // Gets the first selected file
+
+            // If no file is selected, it stops the execution.
+            if (!file) return;
+            
+            // Checks if the file playing still exists, if not, it stops the existing audio and stops the animation loop.
+            if (audioElement) {
+                audioElement.pause();
+                cancelAnimationFrame(animationId);
+            }
+            
+            // Creates a temporary URL for the selected file and saves it to the HTML 5 Audio Object
+            audioElement = new Audio(URL.createObjectURL(file));
+            // Ensures the audio can be used across different  domains
+            audioElement.crossOrigin = "anonymous";
+            
+            // Prevents unnecessary initilization, creates an AudioContext which is necessary for processing and analyzing audio in JavaScript.
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();    // This is a fallback for older browsers like Safari.
+            }
+            
+            // Connect the audio element to the Web API
+            sourceNode = audioContext.createMediaElementSource(audioElement);
+            // Creates an analyser node - provides real-time frequency and waveform data.
+            analyser = audioContext.createAnalyser();
+            // Connects the audio source to the analyser to extract the sound data
+            sourceNode.connect(analyser);
+            // Connects the analyser to the speakers so the sound can still be heard.
+            analyser.connect(audioContext.destination);
+
+            // Set Up the analyser for data extraction
+            analyser.fftSize = 256; // Defines the resolution
+            bufferLength = analyser.frequencyBinCount;  // defines frequency data points
+            // Creates an array of unsigned integers to store frequency data.
+            dataArray = new Uint8Array(bufferLength);
+            
+            // Gets the canvas element
+            canvas = document.getElementById("visualizerCanvas");
+            // Gets the 2D drawing context - allows to draw bars, waves, or ripples.
+            ctx = canvas.getContext("2d");
+            
+            // Starts playing the file
+            audioElement.play();
+
+            // Calls the visualization function
+            visualize();
+        });
+
+        // Gets the stop button
+        document.getElementById("stopButton").addEventListener("click", function() {
+            // If pause button is clicked, the canvas will stop drawing.
+            if (audioElement) {
+                audioElement.pause();
+                cancelAnimationFrame(animationId);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        });
+
+        // Defining the visualize function
+        function visualize() {
+            // Creates a loop in which every frame runs 6- times per second to keep the visualization smooth.
+            animationId = requestAnimationFrame(visualize);
+
+            // Fills the dataArray with the frequency values.
+            analyser.getByteFrequencyData(dataArray);
+
+            // Clear the canvas before drawing the next frame.
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Alter the visualization according to the selections
+            if (visualizerType === "bars") {
+                drawBars();
+            } else if (visualizerType === "ripples") {
+                drawRipples();
+            } else if (visualizerType === "waves") {
+                drawWaves();
+            }
+        }
+
+        // Function to draw Bars
+        function drawBars() {
+            let barWidth = (canvas.width / bufferLength) * 2.5;
+            let x = 0;
+            for (let i = 0; i < bufferLength; i++) {
+                let barHeight = dataArray[i] / 2;
+                ctx.fillStyle = `rgb(${barHeight + 100}, 50, 150)`;
+                ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+                x += barWidth + 1;
+            }
+        }
+
+        // Function to draw Ripples
+        function drawRipples() {
+            let centerX = canvas.width / 2;
+            let centerY = canvas.height / 2;
+            let radius = dataArray[10] * 2;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = `rgba(0, 150, 255, 0.5)`;
+            ctx.fill();
+        }
+
+        // Function to draw Waves
+        function drawWaves() {
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height / 2);
+            for (let i = 0; i < bufferLength; i++) {
+                let y = (dataArray[i] / 255) * canvas.height;
+                ctx.lineTo(i * (canvas.width / bufferLength), canvas.height / 2 - y);
+            }
+            ctx.strokeStyle = "cyan";
+            ctx.stroke();
+        }
+    </script>
+    <p>@Akshveer Kaur</p>
+</body>
+</html>
